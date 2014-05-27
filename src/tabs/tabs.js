@@ -35,10 +35,11 @@ angular.module('ui.bootstrap.tabs', [])
     }
   };
 
-  ctrl.removeTab = function removeTab(tab) {
-    var index = tabs.indexOf(tab);
+  ctrl.removeTab = function removeTab(tab, isOnDestroy) {
+    var index = tabs.indexOf(tab),
+       isOnDestroy = isOnDestroy || false;
     //Select a new tab if the tab to be removed is selected
-    if (tab.active && tabs.length > 1) {
+    if (!isOnDestroy && tab.active && tabs.length > 1) {
       //If this is the last tab, select the previous tab. else, the next tab.
       var newActiveIndex = index == tabs.length - 1 ? index - 1 : index + 1;
       ctrl.select(tabs[newActiveIndex]);
@@ -214,7 +215,7 @@ angular.module('ui.bootstrap.tabs', [])
 
         tabsetCtrl.addTab(scope);
         scope.$on('$destroy', function() {
-          tabsetCtrl.removeTab(scope);
+          tabsetCtrl.removeTab(scope, true);
         });
 
         //We need to transclude later, once the content container is ready.
